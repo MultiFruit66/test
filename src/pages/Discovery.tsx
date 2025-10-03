@@ -1,5 +1,6 @@
+import {DiscoveryTable} from "@/widgets/DiscoveryTable.tsx";
 
 
 export const DiscoveryPage = () => {
-    return <div>Discovery</div>;
+    return <DiscoveryTable />;
 }

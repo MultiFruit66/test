@@ -7,9 +7,9 @@ interface Props {
 
 export const MainLayout = ({ children }: Props) => {
     return (
-        <>
+        <div className="flex bg-background">
             <Sidebar />
-            <main>{children}</main>
-        </>
+            <main className="w-full">{children}</main>
+        </div>
     )
 }
