@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
+import type {AppService} from "@/entities/types/app-service.ts";
 
 
-export const useAppServices = () => {
-    const [data, setData] = useState(null);
+export const useAppServices = ({ page = 0 }) => {
+    const [data, setData] = useState<AppService[] | null>(null);
+    // const setRecoilState = useSetRecoilState(appServicesAtom);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -15,7 +17,7 @@ export const useAppServices = () => {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        pageNumber: 0,
+                        pageNumber: page,
                         pageSize: 25,
                     }),
                 });
@@ -25,7 +27,8 @@ export const useAppServices = () => {
                 }
 
                 const json = await response.json();
-                setData(json);
+                setData(json.appRows);
+                // setRecoilState((data) => [...json.appRows])
             } catch (err) {
                 setError(err);
             } finally {

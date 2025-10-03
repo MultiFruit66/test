@@ -8,16 +8,31 @@ import {
     TableCell
 } from "@/components/ui/table.tsx";
 import {useAppServices} from "@/shared/hooks/discovery/useAppServices.ts";
-import type {AppService} from "@/entities/app-service.ts";
 import reco from '../../shared/assets/reco.svg'
+import {useRecoilValue} from "recoil";
+import {appServicesAtom} from "@/entities/atoms/app-services.ts";
+import {
+    Pagination,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink, PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination";
+import {PaginationContent} from "@/components/ui/pagination.tsx";
+import {useState} from "react";
 
 export const Table = () => {
-    const { data } = useAppServices();
+    const [page, setPage] = useState(0);
+    const { data } = useAppServices({ page });
+
+    const paginationItems = [page, page + 1, page + 2];
+
     console.log({ data })
 
     return (
+        <div className="flex flex-col w-full gap-6">
         <TableComponent className="flex-3 bg-primary text-white">
-            <TableCaption>A list of your recent invoices.</TableCaption>
+            {/*<TableCaption>A list of your recent invoices.</TableCaption>*/}
             <TableHeader className="bg-accent border-10 border-background h-16">
                 <TableRow>
                     <TableHead className="text-white">Name</TableHead>
@@ -26,7 +41,7 @@ export const Table = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {(data?.appRows as AppService[])?.map((row) => (
+                {data?.map((row) => (
                     <TableRow key={row.appId} className={"border-10 border-background h-16"}>
                         <TableCell>{row.appName}</TableCell>
                         <TableCell>{row.category}</TableCell>
@@ -40,5 +55,26 @@ export const Table = () => {
                 ))}
             </TableBody>
         </TableComponent>
+
+
+            <Pagination className="text-white">
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious onClick={() => setPage(page && page - 1)} />
+                    </PaginationItem>
+                    {paginationItems.map((num) => (
+                        <PaginationItem>
+                            <PaginationLink isActive={num === page} onClick={() => setPage(num)}>{num}</PaginationLink>
+                        </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                        <PaginationEllipsis />
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationNext href="#" />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        </div>
     )
 }
